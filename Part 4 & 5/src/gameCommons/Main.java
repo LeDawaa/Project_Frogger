@@ -8,7 +8,6 @@ import javax.swing.Timer;
 import frog.Frog;
 /* import givenEnvironment.GivenEnvironment; */
 import environment.*;
-import util.SpriteLoader;
 import graphicalElements.FroggerGraphic;
 import graphicalElements.IFroggerGraphics;
 
@@ -26,10 +25,9 @@ public class Main {
 		//Création de l'interface graphique
 		IFroggerGraphics graphic = new FroggerGraphic(width, height);
 		//Chargement des sprites
-		SpriteLoader images = new SpriteLoader();
 		System.out.println("done");
 		//Création de la partie
-		Game game = new Game(graphic, width, height, minSpeedInTimerLoops, defaultDensity, images);
+		Game game = new Game(graphic, width, height, minSpeedInTimerLoops, defaultDensity);
 		//Création et liason de la grenouille
 		IFrog frog = new Frog(game);
 		game.setFrog(frog);

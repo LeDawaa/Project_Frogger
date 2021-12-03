@@ -10,6 +10,7 @@ public class SpriteLoader {
     public HashMap<String, BufferedImage> spritesFrog = new HashMap<String, BufferedImage>();
     public HashMap<String, BufferedImage> spritesLTR = new HashMap<String, BufferedImage>();
     public HashMap<String, BufferedImage> spritesRTL = new HashMap<String, BufferedImage>();
+    public HashMap<String, BufferedImage> backgrounds = new HashMap<String, BufferedImage>();
 
     public SpriteLoader() {
         this.spritesFrog.put("FrogUp", LoadSprite("FrogUp"));
@@ -17,8 +18,9 @@ public class SpriteLoader {
         this.spritesFrog.put("FrogLeft", LoadSprite("FrogLeft"));
         this.spritesFrog.put("FrogRight", LoadSprite("FrogRight"));
 
-        this.spritesFrog.put("ItsATrap", LoadSprite("ItsATrap"));
-        this.spritesFrog.put("Star", LoadSprite("Star"));
+        this.backgrounds.put("ItsATrap", LoadSprite("ItsATrap"));
+        this.backgrounds.put("Star", LoadSprite("Star"));
+        this.backgrounds.put("Safe", LoadSprite("safe"));
 
         this.spritesLTR.put("Car_1_LTR", LoadSprite("Car_1_LTR"));
         this.spritesLTR.put("Car_2_LTR", LoadSprite("Car_2_LTR"));
@@ -35,9 +37,9 @@ public class SpriteLoader {
         this.spritesRTL.put("Truck_2_RTL", LoadSprite("Truck_2_RTL"));
     }
 
-    public static BufferedImage LoadSprite (String filename) {
-        try{
-            return ImageIO.read(new File("src/sprites/" + filename + ".png"));
+    public static BufferedImage LoadSprite(String filename) {
+        try {
+            return ImageIO.read(new File("squelette1FRog/src/sprites/" + filename + ".png"));
         } catch (IOException io) {
             System.out.println(filename);
             throw new RuntimeException(io);

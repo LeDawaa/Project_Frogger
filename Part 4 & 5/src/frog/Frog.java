@@ -31,6 +31,10 @@ public class Frog implements IFrog {
 		return this.sprite;
 	}
 
+	public void moveLeft(boolean b){
+		this.position = new Case(b ? this.position.absc + 1 : this.position.absc - 1, this.position.ord);
+	}
+
 	public void move(Direction key){
 		if (key == Direction.up){
 			this.position = new Case(this.position.absc, this.position.ord + 1);

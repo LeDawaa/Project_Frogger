@@ -40,14 +40,14 @@ public class Game {
 	 * @param defaultDensity
 	 *            densite de voiture utilisee par defaut pour les routes
 	 */
-	public Game(IFroggerGraphics graphic, int width, int height, int minSpeedInTimerLoop, double defaultDensity, SpriteLoader images) {
+	public Game(IFroggerGraphics graphic, int width, int height, int minSpeedInTimerLoop, double defaultDensity) {
 		super();
 		this.graphic = graphic;
 		this.width = width;
 		this.height = height;
 		this.minSpeedInTimerLoops = minSpeedInTimerLoop;
 		this.defaultDensity = defaultDensity;
-		this.images = images;
+		this.images = new SpriteLoader();
 	}
 
 	public void addLane(boolean forward){
@@ -61,6 +61,10 @@ public class Game {
 	 */
 	public void setFrog(IFrog frog) {
 		this.frog = frog;
+	}
+
+	public IFrog getFrog() {
+		return this.frog;
 	}
 
 	/**
@@ -92,6 +96,19 @@ public class Game {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Teste si la partie est gagnee et lance un écran de fin approprié si tel
+	 * est le cas
+	 * 
+	 * @return true si la partie est gagnée
+	 */
+	public boolean testWin() {
+		if (this.environment.isWinningPosition(this.frog.getPosition())) {
+			this.graphic.endGameScreen("You WIN", "You WIN" ,"You WIN");
+			return true;
+		} return false;
 	}
 
 	/**

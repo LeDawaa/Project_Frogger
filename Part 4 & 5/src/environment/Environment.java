@@ -8,7 +8,8 @@ import gameCommons.IEnvironment;
 
 public class Environment implements IEnvironment {
 	private Game game;
-	private ArrayList<Lane> Lanes;
+	private ArrayList<Lane> Lanes = new ArrayList<Lane>();;
+	private ArrayList<Wouter> Wouters = new ArrayList<Wouter>();;
 
 	/* Prend en paramètre l'instance de game.
 	* Les 3 premières lignes sont initialisées comme vides afin de mourrir dès le début
@@ -16,12 +17,15 @@ public class Environment implements IEnvironment {
 	* le jeu est update game.width * 5 fois afin que les voitures soient déjà disposées aléatoirement*/
 	public Environment(Game game){
 		this.game = game;
-		this.Lanes = new ArrayList<Lane>();
 		this.Lanes.add(new Lane(game, 0, 0));
 		this.Lanes.add(new Lane(game, 1, 0));
 		this.Lanes.add(new Lane(game, 2, 0));
-		for (int i = 3; i < game.height; i++){
-			this.Lanes.add(new Lane(game, i));
+		for (int i = 2; i < game.height; i++){
+			if (game.randomGen.nextInt(100) < 25) {
+				this.Wouters.add(new Wouter(game, i));
+			} else {
+				this.Lanes.add(new Lane(game, i));
+			}
 		}
 		for (int i = 1; i < game.width * 5; i++){ update(); }
 	}
@@ -30,7 +34,7 @@ public class Environment implements IEnvironment {
 	* la grenouille ne change virtuellement pas de place et reste à 2 d'ordonné
 	* on vérifie donc seulement pour la deuxième ligne */
 	public boolean isSafe(Case c){
-		return this.Lanes.get(1).isSafe(c);
+		return this.Lanes.get(1).isSafe(c); /* && this.Wouters.get(2).isSafe(c); */
 	}
 
 	/* Prend en paramètre un boolean forward
@@ -56,5 +60,17 @@ public class Environment implements IEnvironment {
     	while (i.hasNext()){
 			i.next().update();
 		}
+		Iterator<Wouter> j = this.Wouters.iterator();
+    	while (j.hasNext()){
+			j.next().update();
+		}
+	}
+
+
+	/* Prend en paramètre une case c
+	* teste si l'ordonnée de la case c correspond à la ligne la plus haute
+	* NOT USED ANYMORE */
+	public boolean isWinningPosition(Case c){
+		return (c.ord == game.height - 1 ? true : false);
 	}
 }

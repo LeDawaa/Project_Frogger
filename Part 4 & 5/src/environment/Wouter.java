@@ -3,45 +3,26 @@ package environment;
 import java.util.ArrayList;
 import java.util.Iterator;
 import util.Case;
-import graphicalElements.Element;
 import gameCommons.Game;
 
-public class Lane {
+public class Wouter {
 	private Game game;
 	private int ord;
 	private int speed;
-	private ArrayList<Car> cars = new ArrayList<>();
-	private ArrayList<Trap> traps = new ArrayList<>();
-	private ArrayList<Star> stars = new ArrayList<>();
+	private ArrayList<Log> logs = new ArrayList<>();
 	private boolean leftToRight;
-	private double density;
+	private double density = 0.5;
 	private int tick = 0;
 
 	/* Prend en paramètre l'instance de game et une ordonnée.
 	* La vitesse est choisie aléatoirement entre 0 et game.minSpeedInTimerLoops, on y ajoute 1 pour éviter une ligne immobile
 	* le leftToRight est lui aussi un boolean aléatoire
 	* la densité est celle déclaré dans game */
-	public Lane(Game game, int ord){
+	public Wouter(Game game, int ord) {
 		this.game = game;
 		this.ord = ord;
 		this.speed = this.game.randomGen.nextInt(game.minSpeedInTimerLoops) + 1;
 		this.leftToRight = this.game.randomGen.nextBoolean();
-		this.density = game.defaultDensity;
-		if (game.randomGen.nextInt(100) < 10) {
-			this.traps.add(new Trap(game, new Case (game.randomGen.nextInt(game.width), ord)));
-		} if (game.randomGen.nextInt(100) < 10) {
-			this.stars.add(new Star(game, new Case (game.randomGen.nextInt(game.width), ord)));
-		}
-	}
-
-	/* Prend en paramètre l'instance de game, une ordonnée et une densité.
-	* appel au constructeur précédent
-	* la densité est modifié pour correspondre au paramètre */
-	public Lane(Game game, int ord, int density){
-		this(game, ord);
-		this.density = density;
-		traps = new ArrayList<>();
-		stars = new ArrayList<>();
 	}
 
 	/* Retourne l'ordonnée de la ligne */
@@ -60,16 +41,11 @@ public class Lane {
 	A chaque tic d'horloge, une voiture peut être ajoutée */
 	public void update() {
 		boolean ok = (tick == speed);
-		moveCars(ok);
-		removeCarOOB();
+		moveLogs(ok);
+		removeLogOOB();
 		if(ok){
-			mayAddCar();
+			mayAddLog();
 		}
-		for (Trap sneakyBoy : this.traps) {
-			sneakyBoy.addToGraphics();
-		} for (Star twinklingStar : this.stars) {
-			twinklingStar.addToGraphics();
-		} addToGraphicsEmptyRoads();
 		this.tick = (this.tick + 1) % (speed + 1);
 	}
 
@@ -77,21 +53,12 @@ public class Lane {
 	* on vérifie pour chaque voiture si tous les cas sont isSafe
 	* si un seul cas n'est pas safe, return false */
 	public boolean isSafe(Case c){
-		for (Star twinklingStar : this.stars) {
-			if(twinklingStar.isReallyReallyGood(c)){
-				this.game.invincibilityTime = System.nanoTime() + 10000000000L;
-			}
-		}
 		if (this.game.invincibilityTime > System.nanoTime()) {
 			return true;
 		}
 		
-		for (Car car: this.cars){
-			if(!car.isSafe(c)){
-				return false;
-			}
-		} for (Trap sneakyBoy : this.traps) {
-			if(sneakyBoy.isBadlySpecial(c)){
+		for (Log log: this.logs){
+			if(!log.isSafe(c)){
 				return false;
 			}
 		} return true;
@@ -99,8 +66,8 @@ public class Lane {
 
 	/* Itere à travers toutes les voitures de la ligne,
 	* si une voiture est OutOfBound, elle est supprimée de l'array */
-	public void removeCarOOB(){
-		Iterator<Car> i = this.cars.iterator();
+	public void removeLogOOB(){
+		Iterator<Log> i = this.logs.iterator();
     	while (i.hasNext()){
 			if(i.next().OOB()){
 				i.remove();
@@ -109,20 +76,14 @@ public class Lane {
 	}
 
 	/* Itere à travers toutes les voitures de la ligne pour leur appliquer la méthode moveCar */
-	public void moveCars(boolean b){
-		Iterator<Car> i = this.cars.iterator();
+	public void moveLogs(boolean b){
+		Iterator<Log> i = this.logs.iterator();
     	while (i.hasNext()){
-			i.next().moveCar(b);
+			i.next().moveLog(b);
 		}
 	}
 
-	public void addToGraphicsEmptyRoads() {
-		if (this.density == 0) {
-			for (int i = 0; i < this.game.width; i++) {
-				game.getGraphic().addBackground(new Element(i, this.ord - this.game.Score, this.game.images.backgrounds.get("Safe")));
-			}
-		}
-	}
+
 
 	/*
 	 * Fourni : mayAddCar(), getFirstCase() et getBeforeFirstCase() 
@@ -132,10 +93,10 @@ public class Lane {
 	 * Ajoute une voiture au début de la voie avec probabilité égale à la
 	 * densité, si la première case de la voie est vide
 	 */
-	private void mayAddCar() {
+	private void mayAddLog() {
 		if (isSafe(getFirstCase()) && isSafe(getBeforeFirstCase())) {
 			if (game.randomGen.nextDouble() < density) {
-				cars.add(new Car(game, getBeforeFirstCase(), leftToRight));
+				logs.add(new Log(game, getBeforeFirstCase(), leftToRight));
 			}
 		}
 	}
@@ -154,3 +115,4 @@ public class Lane {
 			return new Case(game.width, ord);
 	}
 }
+

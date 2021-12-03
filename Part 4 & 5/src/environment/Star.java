@@ -16,7 +16,7 @@ public class Star {
 	public Star(Game game, Case firstPosition){
 		this.game = game;
 		this.leftPosition = firstPosition;
-		this.sprite = game.images.spritesFrog.get("Star");
+		this.sprite = game.images.backgrounds.get("Star");
 	}
 
 	/* Si l'ordonnée de la case est différent de celle de la voiture return true,
@@ -28,5 +28,6 @@ public class Star {
 	/* Fourni : addToGraphics() permettant d'ajouter un element graphique correspondant a la voiture*/
 	public void addToGraphics() {
 		game.getGraphic().addBonus(new Element(leftPosition.absc, leftPosition.ord - this.game.Score, this.sprite));
+
 	}
 }

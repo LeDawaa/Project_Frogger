@@ -24,6 +24,8 @@ public interface IFrog {
 	 */
 	public BufferedImage getSprite();
 
+	public void moveLeft(boolean b);
+
 	/**
 	 * Déplace la grenouille dans la direction donnée
 	 * @param key
